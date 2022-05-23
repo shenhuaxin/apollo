@@ -39,6 +39,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.StandardEnvironment;
 
 /**
  * Initialize apollo system properties and inject the Apollo config in Spring Boot bootstrap phase
@@ -140,7 +141,12 @@ public class ApolloApplicationContextInitializer implements
 
       composite.addPropertySource(configPropertySourceFactory.getConfigPropertySource(namespace, config));
     }
-
+    if (environment.getPropertySources().contains(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME)) {
+      if (!isOverrideSystemProperties(environment)) {
+        environment.getPropertySources().addAfter(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, composite);
+        return;
+      }
+    }
     environment.getPropertySources().addFirst(composite);
   }
 
@@ -214,5 +220,10 @@ public class ApolloApplicationContextInitializer implements
    */
   public void setOrder(int order) {
     this.order = order;
+  }
+
+
+  private boolean isOverrideSystemProperties(ConfigurableEnvironment environment) {
+    return environment.getProperty(PropertySourcesConstants.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true);
   }
 }
