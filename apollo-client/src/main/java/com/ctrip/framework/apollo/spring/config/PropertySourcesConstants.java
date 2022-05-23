@@ -22,5 +22,5 @@ public interface PropertySourcesConstants {
   String APOLLO_BOOTSTRAP_ENABLED = "apollo.bootstrap.enabled";
   String APOLLO_BOOTSTRAP_EAGER_LOAD_ENABLED = "apollo.bootstrap.eagerLoad.enabled";
   String APOLLO_BOOTSTRAP_NAMESPACES = "apollo.bootstrap.namespaces";
-  String APOLLO_OVERRIDE_SYSTEM_PROPERTIES = "apollo.overrideSystemProperties";
+  String APOLLO_OVERRIDE_SYSTEM_PROPERTIES = "apollo.bootstrap.overrideSystemProperties";
 }
