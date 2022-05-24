@@ -27,7 +27,6 @@ import com.ctrip.framework.apollo.core.ConfigConsts;
 import com.ctrip.framework.apollo.spring.config.CachedCompositePropertySource;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
 import com.ctrip.framework.apollo.util.ConfigUtil;
-import jdk.jfr.Event;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

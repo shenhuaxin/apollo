@@ -40,11 +40,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
-import org.springframework.core.env.CompositePropertySource;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.core.env.PropertySource;
+import org.springframework.core.env.*;
 
 /**
  * Apollo Property Sources processor for Spring Annotation Based Application. <br /> <br />
@@ -110,12 +106,20 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
     if (environment.getPropertySources()
         .contains(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME)) {
 
-      // ensure ApolloBootstrapPropertySources is still the first
-      ensureBootstrapPropertyPrecedence(environment);
+      if (!isOverrideSystemProperties(environment)) {
+        // ensure ApolloBootstrapPropertySources is still the first
+        ensureBootstrapPropertyPrecedence(environment);
+      }
 
       environment.getPropertySources()
           .addAfter(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME, composite);
     } else {
+      if (environment.getPropertySources().contains(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME)) {
+        if (!isOverrideSystemProperties(environment)) {
+          environment.getPropertySources().addAfter(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, composite);
+          return;
+        }
+      }
       environment.getPropertySources().addFirst(composite);
     }
   }
@@ -147,6 +151,10 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
     for (ConfigPropertySource configPropertySource : configPropertySources) {
       configPropertySource.addChangeListener(configChangeEventPublisher);
     }
+  }
+
+  private Boolean isOverrideSystemProperties(ConfigurableEnvironment environment) {
+    return environment.getProperty(PropertySourcesConstants.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true);
   }
 
   @Override
