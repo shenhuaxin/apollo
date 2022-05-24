@@ -106,7 +106,7 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
     if (environment.getPropertySources()
         .contains(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME)) {
 
-      if (!isOverrideSystemProperties(environment)) {
+      if (isOverrideSystemProperties(environment)) {
         // ensure ApolloBootstrapPropertySources is still the first
         ensureBootstrapPropertyPrecedence(environment);
       }
