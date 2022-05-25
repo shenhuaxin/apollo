@@ -20,6 +20,7 @@ import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigChangeListener;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.build.ApolloInjector;
+import com.ctrip.framework.apollo.core.ApolloClientSystemConsts;
 import com.ctrip.framework.apollo.spring.events.ApolloConfigChangeEvent;
 import com.ctrip.framework.apollo.spring.util.SpringInjector;
 import com.ctrip.framework.apollo.util.ConfigUtil;
@@ -154,7 +155,8 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
   }
 
   private Boolean isOverrideSystemProperties(ConfigurableEnvironment environment) {
-    return environment.getProperty(PropertySourcesConstants.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true);
+    return environment.getProperty(ApolloClientSystemConsts.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true)
+            && configUtil.isOverrideSystemProperties();
   }
 
   @Override

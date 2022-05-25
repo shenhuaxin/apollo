@@ -224,6 +224,6 @@ public class ApolloApplicationContextInitializer implements
 
 
   private boolean isOverrideSystemProperties(ConfigurableEnvironment environment) {
-    return environment.getProperty(PropertySourcesConstants.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true);
+    return environment.getProperty(ApolloClientSystemConsts.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true);
   }
 }
