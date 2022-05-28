@@ -91,7 +91,8 @@ public class ApolloApplicationContextInitializer implements
       ApolloClientSystemConsts.APOLLO_META,
       ApolloClientSystemConsts.APOLLO_CONFIG_SERVICE,
       ApolloClientSystemConsts.APOLLO_PROPERTY_ORDER_ENABLE,
-      ApolloClientSystemConsts.APOLLO_PROPERTY_NAMES_CACHE_ENABLE};
+      ApolloClientSystemConsts.APOLLO_PROPERTY_NAMES_CACHE_ENABLE,
+      ApolloClientSystemConsts.APOLLO_OVERRIDE_SYSTEM_PROPERTIES};
 
   private final ConfigPropertySourceFactory configPropertySourceFactory = SpringInjector
       .getInstance(ConfigPropertySourceFactory.class);
@@ -141,13 +142,13 @@ public class ApolloApplicationContextInitializer implements
 
       composite.addPropertySource(configPropertySourceFactory.getConfigPropertySource(namespace, config));
     }
-    if (environment.getPropertySources().contains(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME)) {
-      if (!isOverrideSystemProperties(environment)) {
+    if (configUtil.isOverrideSystemProperties()) {
+      environment.getPropertySources().addFirst(composite);
+    } else {
+      if (environment.getPropertySources().contains(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME)) {
         environment.getPropertySources().addAfter(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, composite);
-        return;
       }
     }
-    environment.getPropertySources().addFirst(composite);
   }
 
   /**
@@ -222,8 +223,4 @@ public class ApolloApplicationContextInitializer implements
     this.order = order;
   }
 
-
-  private boolean isOverrideSystemProperties(ConfigurableEnvironment environment) {
-    return environment.getProperty(ApolloClientSystemConsts.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true);
-  }
 }

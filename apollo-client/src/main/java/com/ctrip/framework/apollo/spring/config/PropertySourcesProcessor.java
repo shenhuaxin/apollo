@@ -107,7 +107,7 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
     if (environment.getPropertySources()
         .contains(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME)) {
 
-      if (isOverrideSystemProperties(environment)) {
+      if (configUtil.isOverrideSystemProperties()) {
         // ensure ApolloBootstrapPropertySources is still the first
         ensureBootstrapPropertyPrecedence(environment);
       }
@@ -115,13 +115,13 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
       environment.getPropertySources()
           .addAfter(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME, composite);
     } else {
-      if (environment.getPropertySources().contains(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME)) {
-        if (!isOverrideSystemProperties(environment)) {
+      if (configUtil.isOverrideSystemProperties()) {
+        environment.getPropertySources().addFirst(composite);
+      } else {
+        if (environment.getPropertySources().contains(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME)) {
           environment.getPropertySources().addAfter(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, composite);
-          return;
         }
       }
-      environment.getPropertySources().addFirst(composite);
     }
   }
 
@@ -152,11 +152,6 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
     for (ConfigPropertySource configPropertySource : configPropertySources) {
       configPropertySource.addChangeListener(configChangeEventPublisher);
     }
-  }
-
-  private Boolean isOverrideSystemProperties(ConfigurableEnvironment environment) {
-    return environment.getProperty(ApolloClientSystemConsts.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true)
-            && configUtil.isOverrideSystemProperties();
   }
 
   @Override
