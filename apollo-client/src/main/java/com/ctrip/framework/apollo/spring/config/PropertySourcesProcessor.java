@@ -115,13 +115,13 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor, Envir
       environment.getPropertySources()
           .addAfter(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME, composite);
     } else {
-      if (configUtil.isOverrideSystemProperties()) {
-        environment.getPropertySources().addFirst(composite);
-      } else {
+      if (!configUtil.isOverrideSystemProperties()) {
         if (environment.getPropertySources().contains(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME)) {
           environment.getPropertySources().addAfter(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, composite);
+          return;
         }
       }
+      environment.getPropertySources().addFirst(composite);
     }
   }
 
