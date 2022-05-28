@@ -17,13 +17,12 @@
 package com.ctrip.framework.apollo.spring.config;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigChangeListener;
 import com.ctrip.framework.apollo.build.ApolloInjector;
+import com.ctrip.framework.apollo.build.MockInjector;
 import com.ctrip.framework.apollo.core.ApolloClientSystemConsts;
 import com.ctrip.framework.apollo.core.ConfigConsts;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
@@ -140,8 +139,11 @@ public class PropertySourcesProcessorTest extends AbstractSpringIntegrationTest 
     when(environment.getPropertySources()).thenReturn(propertySources);
     when(environment.getProperty(PropertySourcesConstants.APOLLO_BOOTSTRAP_NAMESPACES,
             ConfigConsts.NAMESPACE_APPLICATION)).thenReturn("");
-    when(environment.getProperty(ApolloClientSystemConsts.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true))
-            .thenReturn(false);
+
+    ConfigUtil configUtil = new ConfigUtil();
+    configUtil = spy(configUtil);
+    when(configUtil.isOverrideSystemProperties()).thenReturn(false);
+    MockInjector.setInstance(ConfigUtil.class, configUtil);
 
     processor.setEnvironment(environment);
     processor.postProcessBeanFactory(beanFactory);

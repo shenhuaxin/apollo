@@ -158,9 +158,12 @@ public class ApolloApplicationContextInitializerTest {
     propertySources.addLast(new PropertiesPropertySource(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, properties));
 
     when(environment.getPropertySources()).thenReturn(propertySources);
-    when(environment.getProperty(ApolloClientSystemConsts.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, Boolean.class, true)).thenReturn(false);
     when(environment.getProperty(PropertySourcesConstants.APOLLO_BOOTSTRAP_NAMESPACES,
             ConfigConsts.NAMESPACE_APPLICATION)).thenReturn("");
+    ConfigUtil configUtil = new ConfigUtil();
+    configUtil = spy(configUtil);
+    when(configUtil.isOverrideSystemProperties()).thenReturn(false);
+    MockInjector.setInstance(ConfigUtil.class, configUtil);
 
     apolloApplicationContextInitializer.initialize(environment);
 
