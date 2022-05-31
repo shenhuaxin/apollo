@@ -36,7 +36,7 @@
       "defaultValue": false
     },
     {
-      "name": "apollo.overrideSystemProperties",
+      "name": "apollo.override-system-properties",
       "type": "java.lang.Boolean",
       "sourceType": "com.ctrip.framework.apollo.util.ConfigUtil",
       "description": "enable apollo server config override system properties.",
