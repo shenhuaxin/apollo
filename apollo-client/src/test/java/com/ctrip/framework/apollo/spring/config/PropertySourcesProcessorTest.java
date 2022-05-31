@@ -130,7 +130,7 @@ public class PropertySourcesProcessorTest extends AbstractSpringIntegrationTest 
   public void testOverrideSystemProperties() {
     Properties properties = new Properties();
     properties.setProperty("server.port", "8080");
-    properties.setProperty("apollo.overrideSystemProperties", "false");
+    properties.setProperty(ApolloClientSystemConsts.APOLLO_OVERRIDE_SYSTEM_PROPERTIES, "false");
     ConfigurableEnvironment environment = mock(ConfigurableEnvironment.class);
 
     MutablePropertySources propertySources = new MutablePropertySources();
